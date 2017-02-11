@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  python: &python
+    build: .
+    image: joanfont/grissom
+    volumes:
+      - ".:/code"
+
+  mongo:
+    image: library/mongo:3.4.2
+    volumes:
+      - "/opt/grissom/mongo:/data/db"
+    ports:
+      - "7777:27017"
+
+  rabbit:
+    image: library/rabbitmq:3.6.6-alpine
+
+  celery:
+    image: library/celery:4.0.2
+    links:
+      - rabbit
+
+  scrapy:
+    <<: *python
+    env_file:
+      - .env
+    entrypoint: ["scrapy"]
