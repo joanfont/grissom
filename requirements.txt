@@ -3,3 +3,4 @@ pymongo==3.4.0
 python-decouple==3.0
 celery==4.0.2
 pushbullet.py==0.10.0
+PyYAML==3.12

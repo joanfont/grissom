@@ -17,6 +17,8 @@ class Item(scrapy.Item):
     description = scrapy.Field()
     price = scrapy.Field()
 
+    town = scrapy.Field()
+
     rooms = scrapy.Field()
     bathrooms = scrapy.Field()
     area = scrapy.Field()
@@ -27,4 +29,9 @@ class Item(scrapy.Item):
 
 class PonsOliverItem(Item):
     SITE_NAME = 'Inmobiliaria Pons Oliver'
+    PK = 'url'
+
+
+class FotocasaItem(Item):
+    SITE_NAME = 'Fotocasa'
     PK = 'url'

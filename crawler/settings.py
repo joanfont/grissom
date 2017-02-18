@@ -66,8 +66,8 @@ ROBOTSTXT_OBEY = True
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'crawler.pipelines.SaveOnMongo': 1,
-   'crawler.pipelines.SendToPushBullet': 2,
-   'crawler.pipelines.UpdateNotified': 3,
+   # 'crawler.pipelines.SendToPushBullet': 2,
+   # 'crawler.pipelines.UpdateNotified': 3,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

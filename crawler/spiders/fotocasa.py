@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+from crawler.spiders import ConfigurableSpider
 
-class FotocasaSpider(scrapy.Spider):
+
+class FotocasaSpider(ConfigurableSpider):
     name = "fotocasa"
     allowed_domains = ["fotocasa.es"]
-    start_urls = ['http://fotocasa.es/']
 
     def parse(self, response):
         pass

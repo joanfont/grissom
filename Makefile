@@ -3,3 +3,6 @@ build:
 
 push:
 	docker push joanfont/grissom
+
+mongo:
+	docker-compose up -d mongo

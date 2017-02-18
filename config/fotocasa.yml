@@ -1,0 +1,26 @@
+url: http://www.fotocasa.es/es/alquiler/casas/{zone}/todas-las-zonas/l
+
+zones:
+  palma: palma-de-mallorca
+  esporles: esporles
+  valldemossa: valldemossa
+  bunyola: bunyola
+  santa_maria: santa-maria-del-cami
+
+filters:
+  palma:
+    min_price: 400
+    max_price: 750
+    min_rooms: 2
+
+  esporles:
+    max_price: 600
+
+  valldemossa:
+    max_price: 600
+
+  bunyola:
+    max_price: 600
+
+  santa_maria:
+    max_price: 600
