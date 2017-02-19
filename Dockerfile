@@ -1,5 +1,5 @@
 FROM library/python:3.6.0-alpine
-MAINTAINER Joan Font <joanfont@gmail.com
+MAINTAINER Joan Font <joanfont@gmail.com>
 
 RUN apk add --update build-base \
 	libffi-dev \
