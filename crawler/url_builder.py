@@ -3,6 +3,7 @@ from crawler import filters
 
 from urllib.parse import urlencode
 
+
 class Base:
     SITE = None
     FILTER_CLASS = None
@@ -15,19 +16,29 @@ class Base:
         raise NotImplementedError()
 
     def check_config(self):
-        assert self.config.get('url') is not None
+        assert self.config.get('url', {}).get('base') is not None
 
-    @property
-    def config_file(self):
-        return f'config/{self.SITE}.yml'
-
-    def zone_filters(self, zone):
-        return self.config.get('filters').get(zone)
+    def append_to_base(self, path):
+        base = self.base_url
+        return f'{base}{path}'
 
     def get_site_config(self):
         with open(self.config_file, 'r') as f:
             config = yaml.safe_load(f)
         return config
+
+    @property
+    def config_file(self):
+        return f'config/{self.SITE}.yml'
+
+    @property
+    def base_url(self):
+        return self.config.get('url').get('base')
+
+    @property
+    def template_url(self):
+        path = self.config.get('url').get('path')
+        return self.append_to_base(path)
 
 
 class Fotocasa(Base):
@@ -40,7 +51,7 @@ class Fotocasa(Base):
             yield self._generate_zone_url(zone)
 
     def _generate_zone_url(self, zone):
-        base_url = self.config.get('url')
+        base_url = self.template_url
         zone_slug = self.config.get('zones', {}).get(zone)
         url = base_url.format(zone=zone_slug)
 
@@ -59,15 +70,13 @@ class Fotocasa(Base):
 
 class Factory:
     SITES = {
-        'fotocasa': Fotocasa,
+        Fotocasa.SITE: Fotocasa,
     }
 
     @classmethod
-    def build_urls_for(cls, site):
+    def build(cls, site):
         builder_class = cls.SITES.get(site)
         if not builder_class:
-            return []
+            return None
 
-        builder = builder_class()
-        return builder.generate()
-
+        return builder_class()

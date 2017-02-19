@@ -4,6 +4,8 @@ services:
   python: &python
     build: .
     image: joanfont/grissom
+    links:
+      - mongo
     volumes:
       - ".:/code"
 
