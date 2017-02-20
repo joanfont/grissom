@@ -1,5 +1,6 @@
 import scrapy
-from crawler.url_builder import Factory as UrlBuilderFactory
+
+from lib.url_builder import Factory as UrlBuilderFactory
 
 
 class Spider(scrapy.Spider):

@@ -35,3 +35,7 @@ class PonsOliverItem(Item):
 class FotocasaItem(Item):
     SITE_NAME = 'Fotocasa'
     PK = 'url'
+
+class IdealistaItem(Item):
+    SITE_NAME = 'Idealista'
+    PK = 'url'

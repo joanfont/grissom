@@ -1,0 +1,16 @@
+url:
+  base: https://www.idealista.com
+  path: /alquiler-viviendas/{zone}
+
+zones:
+  palma: palma-de-mallorca-balears-illes
+  esporles: esporles-balears-illes
+  valldemossa: valldemosa-balears-illes
+  bunyola: bunyola-balears-illes
+  santa_maria: santa-maria-del-cami-balears-illes
+
+filters:
+  palma:
+    min_price: 400
+    max_price: 750
+    min_rooms: 2
