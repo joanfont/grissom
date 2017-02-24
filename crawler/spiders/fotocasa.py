@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-from crawler.items import FotocasaItem
+from crawler.items import Fotocasa
 from crawler.spiders import ConfigurableSpider
 
 
 class FotocasaSpider(ConfigurableSpider):
-    name = 'fotocasa'
+    name = Fotocasa.CRAWLER_NAME
     allowed_domains = ['fotocasa.es']
 
     def parse(self, response):
@@ -30,4 +30,4 @@ class FotocasaSpider(ConfigurableSpider):
         description = description.strip() if description else None
         price = item.css('span.re-Card-price > span::text').extract_first().strip()
 
-        return FotocasaItem(title=title, url=url, description=description, price=price, town=zone)
+        return Fotocasa(title=title, url=url, description=description, price=price, town=zone)

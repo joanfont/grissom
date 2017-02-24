@@ -9,6 +9,7 @@ import scrapy
 
 
 class Item(scrapy.Item):
+    CRAWLER_NAME = None
     SITE_NAME = None
     PK = None
 
@@ -23,19 +24,30 @@ class Item(scrapy.Item):
     bathrooms = scrapy.Field()
     area = scrapy.Field()
 
-    notified = scrapy.Field()
-    notified_at = scrapy.Field()
+    def to_dict(self):
+        item_dict = dict(self)
+        item_dict.update({
+            'crawler': self.CRAWLER_NAME,
+            'site': self.SITE_NAME,
+            'pk': self.PK
+        })
+
+        return item_dict
 
 
-class PonsOliverItem(Item):
+class PonsOliver(Item):
+    CRAWLER_NAME = 'pons_oliver'
     SITE_NAME = 'Inmobiliaria Pons Oliver'
     PK = 'url'
 
 
-class FotocasaItem(Item):
+class Fotocasa(Item):
+    CRAWLER_NAME = 'fotocasa'
     SITE_NAME = 'Fotocasa'
     PK = 'url'
 
-class IdealistaItem(Item):
+
+class Idealista(Item):
+    CRAWLER = 'idealista'
     SITE_NAME = 'Idealista'
     PK = 'url'

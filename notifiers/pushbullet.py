@@ -8,7 +8,7 @@ class Notifier(BaseNotifier):
         self.client = PushBullet(api_key)
 
     def notify(self, item):
-        site_name = item.SITE_NAME
+        site_name = item.get('site')
         title = f'New property in {site_name}'
         link = item.get('url')
         self.client.push_link(title, link)

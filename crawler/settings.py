@@ -8,7 +8,7 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-from decouple import config
+from lib import config
 
 BOT_NAME = 'crawler'
 
@@ -66,8 +66,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'crawler.pipelines.SaveOnMongo': 1,
-   # 'crawler.pipelines.SendToPushBullet': 2,
-   # 'crawler.pipelines.UpdateNotified': 3,
+   'crawler.pipelines.ScheduleNotifications': 2,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -91,6 +90,6 @@ ITEM_PIPELINES = {
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-MONGO_HOST = config('MONGO_HOST', default='mongo')
-MONGO_PORT = config('MONGO_PORT', default=27017, cast=int)
-PUSHBULLET_API_KEY = config('PUSHBULLET_API_KEY')
+MONGO_HOST = config.MONGO_HOST
+MONGO_PORT = config.MONGO_PORT
+MONGO_DATABASE = config.MONGO_DATABASE

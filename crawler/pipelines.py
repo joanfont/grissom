@@ -4,18 +4,19 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from datetime import datetime
 
-from pymongo import MongoClient
 
-from notifiers import Notifier, PushBulletNotifier
-from copy import copy
+from notifiers import Notifier
+from async.tasks import pushbullet
+from lib import mongo
+
+import logging
 
 
 class Pipeline:
     @classmethod
     def from_crawler(cls, crawler):
-        pass
+        return cls()
 
     def open_spider(self, spider):
         pass
@@ -32,19 +33,21 @@ class Pipeline:
 
 
 class MongoPipeline(Pipeline):
-    def __init__(self, host, port):
+    def __init__(self, host, port, database):
         self.host = host
         self.port = port
+        self.database = database
 
     @classmethod
     def from_crawler(cls, crawler):
         mongo_host = crawler.settings.get('MONGO_HOST')
         mongo_port = crawler.settings.get('MONGO_PORT')
-        return cls(mongo_host, mongo_port)
+        mongo_database = crawler.settings.get('MONGO_DATABASE')
+        return cls(mongo_host, mongo_port, mongo_database)
 
     def open_spider(self, spider):
-        self.client = MongoClient(host=self.host, port=self.port)
-        self.collection = self.client['crawlers'][spider.name]
+        self.client = mongo.Client(self.host, self.port, self.database)
+        self.collection = self.client[spider.name]
 
     def close_spider(self, spider):
         self.client.close()
@@ -54,59 +57,38 @@ class MongoPipeline(Pipeline):
 
 
 class SaveOnMongo(MongoPipeline):
+    IGNORE_KEYS = []
+
     def process_item(self, item, spider):
-        pk_name = item.PK
-        pk_value = item.get(pk_name)
+
+        item_dict = item.to_dict()
+
+        pk_name = item_dict.get('pk')
+        pk_value = item_dict.get(pk_name)
         saved = self.collection.find_one({pk_name: pk_value})
+
         if not saved:
-            item_to_save = copy(dict(item))
-            self.complete_item(item_to_save, {
-                'notified': Notifier.STATUS_PENDING,
-                'notified_at': None,
-            })
-            self.collection.insert(item_to_save)
+            self.insert_item(item_dict)
 
         return item
 
+    def insert_item(self, item):
+        self.remove_useless_keys(item)
+        self.complete_item(item, {
+            'notified': Notifier.STATUS_PENDING,
+            'notified_at': None,
+        })
 
-class SendToPushBullet(Pipeline):
-    def __init__(self, api_key):
-        self.api_key = api_key
+        self.collection.insert(item)
 
     @classmethod
-    def from_crawler(cls, crawler):
-        api_key = crawler.settings.get('PUSHBULLET_API_KEY')
-        return cls(api_key)
+    def remove_useless_keys(cls, item):
+        for key in cls.IGNORE_KEYS:
+            item.pop(key)
 
-    def open_spider(self, spider):
-        self.notifier = PushBulletNotifier(self.api_key)
 
+class ScheduleNotifications(Pipeline):
     def process_item(self, item, spider):
-        is_notified = item.get('notified', Notifier.STATUS_PENDING) == Notifier.STATUS_NOTIFIED
-        if not is_notified:
-            self.notifier.notify(item)
-            self.complete_item(item, {
-                'notified': Notifier.STATUS_NOTIFIED,
-                'notified_at': datetime.now()
-            })
-
-        return item
-
-
-class UpdateNotified(MongoPipeline):
-    def process_item(self, item, spider):
-        pk_name = item.PK
-        pk_value = item.get(pk_name)
-        saved = self.collection.find_one({pk_name: pk_value})
-        is_notified = saved.get('notified', Notifier.STATUS_PENDING) if saved else None
-
-        if saved and is_notified:
-            self.collection.update_one({
-                '_id': saved.get('_id')
-            }, {
-                '$set': {
-                    'notified': is_notified,
-                }
-            })
-
+        item_dict = item.to_dict()
+        pushbullet.delay(item_dict)
         return item

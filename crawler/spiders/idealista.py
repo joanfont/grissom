@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-from crawler.items import IdealistaItem
+from crawler.items import Idealista
 from crawler.spiders import ConfigurableSpider
 
 
 class IdealistaSpider(ConfigurableSpider):
-    name = 'idealista'
+    name = Idealista.CRAWLER_NAME
     allowed_domains = 'idealista.com'
 
     def parse(self, response):
@@ -35,4 +35,4 @@ class IdealistaSpider(ConfigurableSpider):
         description = description.strip() if description else None
         price = info_container.css('div.price-row > span.item-price::text').extract_first().strip()
 
-        return IdealistaItem(title=title, url=url, description=description, price=price, town=zone)
+        return Idealista(title=title, url=url, description=description, price=price, town=zone)

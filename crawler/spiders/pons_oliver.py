@@ -2,11 +2,11 @@
 import scrapy
 
 from crawler.spiders import Spider
-from crawler.items import PonsOliverItem
+from crawler.items import PonsOliver
 
 
 class PonsOliverSpider(Spider):
-    name = 'pons_oliver'
+    name = PonsOliver.CRAWLER_NAME
     allowed_domains = ['inmobiliariaesporles.com']
     start_urls = ['http://www.inmobiliariaesporles.com/property-status/alquiler/']
 
@@ -30,4 +30,4 @@ class PonsOliverSpider(Spider):
 
         town = 'Esporles'
 
-        return PonsOliverItem(title=title, url=url, description=description, price=price, town=town)
+        return PonsOliver(title=title, url=url, description=description, price=price, town=town)

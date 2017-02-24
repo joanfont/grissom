@@ -20,12 +20,18 @@ services:
     image: library/rabbitmq:3.6.6-alpine
 
   celery:
-    image: library/celery:4.0.2
+    <<: *python
     links:
+      - mongo
       - rabbit
+    entrypoint: ["celery"]
+    command: ["worker", "-A", "async.celery"]
 
   scrapy:
     <<: *python
+    links:
+      - mongo
+      - celery
     env_file:
       - .env
     entrypoint: ["scrapy"]
