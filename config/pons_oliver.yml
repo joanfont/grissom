@@ -1,0 +1,5 @@
+url:
+  base: http://www.inmobiliariaesporles.com
+  path: /property-status/alquiler/
+
+periodicity: 3600

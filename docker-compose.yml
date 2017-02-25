@@ -6,6 +6,8 @@ services:
     image: joanfont/grissom
     links:
       - mongo
+    env_file:
+      - .env
     volumes:
       - ".:/code"
 
@@ -19,7 +21,7 @@ services:
   rabbit:
     image: library/rabbitmq:3.6.6-alpine
 
-  celery:
+  worker: &worker
     <<: *python
     links:
       - mongo
@@ -27,11 +29,15 @@ services:
     entrypoint: ["celery"]
     command: ["worker", "-A", "async.celery"]
 
+  beat:
+    <<: *worker
+    links:
+      - worker
+    command: ["beat", "-A", "async.celery",  "--loglevel=debug", "--pidfile="]
+
   scrapy:
     <<: *python
     links:
       - mongo
-      - celery
-    env_file:
-      - .env
+      - worker
     entrypoint: ["scrapy"]

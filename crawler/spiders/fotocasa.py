@@ -11,7 +11,10 @@ class FotocasaSpider(ConfigurableSpider):
 
     def parse(self, response):
         items = response.css('div.re-Card')
-        zone = response.css('ol.re-Breadcrumb-links > li.re-Breadcrumb-item:last-child > span::text').extract_first()
+        zone = response.css(
+            'ol.re-Breadcrumb-links > li.re-Breadcrumb-item:last-child > span::text'
+        ).extract_first().strip()
+
         for item in items:
             yield self.parse_item(zone, item)
 
@@ -20,6 +23,7 @@ class FotocasaSpider(ConfigurableSpider):
         ).extract_first()
 
         if next_page_path:
+            next_page_path = next_page_path
             next_page_url = self.url_builder.append_to_base(next_page_path)
             yield scrapy.Request(next_page_url, callback=self.parse)
 

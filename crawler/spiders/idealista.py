@@ -7,7 +7,7 @@ from crawler.spiders import ConfigurableSpider
 
 class IdealistaSpider(ConfigurableSpider):
     name = Idealista.CRAWLER_NAME
-    allowed_domains = 'idealista.com'
+    allowed_domains = ['idealista.com']
 
     def parse(self, response):
         items = response.css('div.items-container > article:not([class])')

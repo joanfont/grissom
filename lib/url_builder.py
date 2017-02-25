@@ -1,6 +1,7 @@
-import yaml
 
 from lib.filters import Factory as FilterFactory
+from lib import config
+from lib.site_config import SiteConfig
 
 
 class Base:
@@ -13,6 +14,15 @@ class Base:
 
     def generate(self):
         zones = self.config.get('zones')
+        if not zones:
+            return self.generate_simple_url()
+
+        return self.generate_zone_urls(zones)
+
+    def generate_simple_url(self):
+        yield self.template_url
+
+    def generate_zone_urls(self, zones):
         for zone in zones:
             yield self.generate_zone_url(zone)
 
@@ -38,13 +48,12 @@ class Base:
         return f'{base}{path}'
 
     def get_site_config(self):
-        with open(self.config_file, 'r') as f:
-            config = yaml.safe_load(f)
-        return config
+        return SiteConfig.from_yml(self.config_file)
 
     @property
     def config_file(self):
-        return f'config/{self.SITE}.yml'
+        config_dir = config.CONFIG_DIR
+        return f'{config_dir}/{self.SITE}.yml'
 
     @property
     def base_url(self):
@@ -54,6 +63,10 @@ class Base:
     def template_url(self):
         path = self.config.get('url').get('path')
         return self.append_to_base(path)
+
+
+class PonsOliver(Base):
+    SITE = 'pons_oliver'
 
 
 class Fotocasa(Base):
@@ -90,6 +103,7 @@ class Idealista(Base):
 
 class Factory:
     SITES = {
+        PonsOliver.SITE: PonsOliver,
         Fotocasa.SITE: Fotocasa,
         Idealista.SITE: Idealista,
     }

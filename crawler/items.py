@@ -48,6 +48,6 @@ class Fotocasa(Item):
 
 
 class Idealista(Item):
-    CRAWLER = 'idealista'
+    CRAWLER_NAME = 'idealista'
     SITE_NAME = 'Idealista'
     PK = 'url'

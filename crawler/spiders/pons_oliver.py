@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-from crawler.spiders import Spider
+from crawler.spiders import ConfigurableSpider
 from crawler.items import PonsOliver
 
 
-class PonsOliverSpider(Spider):
+class PonsOliverSpider(ConfigurableSpider):
     name = PonsOliver.CRAWLER_NAME
     allowed_domains = ['inmobiliariaesporles.com']
-    start_urls = ['http://www.inmobiliariaesporles.com/property-status/alquiler/']
-
-    pk = 'url'
 
     def parse(self, response):
         items = response.css('article.property-item')

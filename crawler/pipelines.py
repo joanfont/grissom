@@ -7,10 +7,8 @@
 
 
 from notifiers import Notifier
-from async.tasks import pushbullet
+from async.notifiers import pushbullet
 from lib import mongo
-
-import logging
 
 
 class Pipeline:

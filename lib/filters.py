@@ -21,7 +21,7 @@ class Fotocasa(Base):
         filters = self.clean_empty({
             'minPrice': filters.get('min_price'),
             'maxPrice': filters.get('max_price'),
-            'minRooms': filters.get('max_price'),
+            'minRooms': filters.get('min_rooms'),
         })
 
         return urlencode(filters)

@@ -13,3 +13,5 @@ MONGO_PORT = config('MONGO_PORT', default=27017, cast=int)
 MONGO_DATABASE = config('MONGO_DATABASE', default='crawlers')
 
 PUSHBULLET_API_KEY = config('PUSHBULLET_API_KEY')
+
+CONFIG_DIR = config('CONFIG_DIR', default='config')
