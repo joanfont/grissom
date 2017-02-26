@@ -7,3 +7,9 @@ __pycache__
 
 celerybeat.pid
 celerybeat-schedule
+
+ansible/*.retry
+
+ansible/production/*
+!ansible/production/host_vars/.gitkeep
+!ansible/production/.gitkeep

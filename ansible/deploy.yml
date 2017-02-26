@@ -1,0 +1,83 @@
+---
+- hosts: moog
+
+  tasks:
+  - name: Make sure docker is running
+    service:
+      name: docker
+      state: started
+
+  - name: Pull latest grissom image
+    docker_image:
+      name: joanfont/grissom
+      tag: latest
+      pull: yes
+      state: present
+
+  - name: Pull Mongo image
+    docker_image:
+      name: library/mongo
+      tag: 3.2
+      pull: yes
+      state: present
+
+  - name: Pull RabbitMQ image
+    docker_image:
+      name: library/rabbitmq
+      tag: 3.6.6-alpine
+      pull: yes
+      state: present
+
+  - name: Start Mongo
+    docker_container:
+      image: library/mongo:3.2
+      name: mongo
+      volumes:
+        - "/opt/grissom/mongo:/data/db"
+      restart_policy: always
+      state: started
+
+  - name: Start RabbitMQ
+    docker_container:
+      image: library/rabbitmq:3.6.6-alpine
+      name: rabbit
+      keep_volumes: False
+      restart_policy: always
+      state: started
+
+  - name: Start Celery worker
+    docker_container:
+      image: joanfont/grissom:latest
+      name: worker
+      keep_volumes: False
+      env:
+        PUSHBULLET_ENABLED: true
+        PUSHBULLET_API_KEY: "{{ pushbullet_api_key }}"
+        MONGO_HOST: mongo
+        MONGO_PORT: 27017
+      links:
+        - mongo
+        - rabbit
+      entrypoint: "celery"
+      command: "worker -A async.celery"
+      restart_policy: always
+      state: started
+
+  - name: Start Celery Beat
+    docker_container:
+      image: joanfont/grissom:latest
+      name: beat
+      keep_volumes: False
+      env:
+        PUSHBULLET_ENABLED: true
+        PUSHBULLET_API_KEY: "{{ pushbullet_api_key }}"
+        MONGO_HOST: mongo
+        MONGO_PORT: 27017
+      links:
+        - rabbit
+        - mongo
+        - worker
+      entrypoint: "celery"
+      command: "beat -A async.celery --loglevel=debug --pidfile="
+      restart_policy: always
+      state: started
