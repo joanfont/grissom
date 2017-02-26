@@ -86,7 +86,21 @@ class SaveOnMongo(MongoPipeline):
 
 
 class ScheduleNotifications(Pipeline):
+
+    def __init__(self, pushbullet_enabled):
+        self.pushbullet_enabled = pushbullet_enabled
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        pushbullet_enabled = crawler.settings.get('PUSHBULLET_ENABLED')
+        return cls(pushbullet_enabled)
+
     def process_item(self, item, spider):
-        item_dict = item.to_dict()
-        pushbullet.delay(item_dict)
+        if self.pushbullet_enabled:
+            item_dict = item.to_dict()
+            self.pushbullet(item_dict)
         return item
+
+    @classmethod
+    def pushbullet(cls, item):
+        pushbullet.delay(item)

@@ -53,7 +53,7 @@ ROBOTSTXT_OBEY = True
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   'crawler.middlewares.RandomUserAgentMiddleware': 1,
+    'crawler.middlewares.RandomUserAgentMiddleware': 1,
 }
 
 # Enable or disable extensions
@@ -65,8 +65,8 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'crawler.pipelines.SaveOnMongo': 1,
-   'crawler.pipelines.ScheduleNotifications': 2,
+    'crawler.pipelines.SaveOnMongo': 1,
+    'crawler.pipelines.ScheduleNotifications': 2,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -93,3 +93,5 @@ ITEM_PIPELINES = {
 MONGO_HOST = config.MONGO_HOST
 MONGO_PORT = config.MONGO_PORT
 MONGO_DATABASE = config.MONGO_DATABASE
+
+PUSHBULLET_ENABLED = config.PUSHBULLET_ENABLED
