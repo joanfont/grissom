@@ -13,3 +13,5 @@ ansible/*.retry
 ansible/production/*
 !ansible/production/host_vars/.gitkeep
 !ansible/production/.gitkeep
+
+.cache

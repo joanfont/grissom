@@ -3,7 +3,7 @@ version: '2'
 services:
   python: &python
     build: .
-    image: joanfont/grissom
+    image: joanfont/grissom:latest
     links:
       - mongo
     env_file:
@@ -41,3 +41,11 @@ services:
       - mongo
       - worker
     entrypoint: ["scrapy"]
+
+  tests:
+    <<: *python
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: joanfont/grissom:tests
+    entrypoint: ["py.test"]

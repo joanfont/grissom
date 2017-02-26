@@ -3,3 +3,4 @@ celerybeat.pid
 celerybeat-schedule
 
 ansible/*
+.cache
