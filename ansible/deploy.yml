@@ -7,25 +7,43 @@
       name: docker
       state: started
 
+  - name: Stop Celery worker
+    docker_container:
+      image: joanfont/grissom:latest
+      name: worker
+      force_kill: yes
+      state: absent
+
+  - name: Stop Celery beat
+    docker_container:
+      image: joanfont/grissom:latest
+      name: beat
+      force_kill: yes
+      state: absent
+
+  - name: Remove previous grissom image
+    docker_image:
+      name: joanfont/grissom
+      tag: latest
+      state: absent
+
   - name: Pull latest grissom image
     docker_image:
       name: joanfont/grissom
       tag: latest
-      pull: yes
+      force: true
       state: present
 
   - name: Pull Mongo image
     docker_image:
       name: library/mongo
       tag: 3.2
-      pull: yes
       state: present
 
   - name: Pull RabbitMQ image
     docker_image:
       name: library/rabbitmq
       tag: 3.6.6-alpine
-      pull: yes
       state: present
 
   - name: Start Mongo
