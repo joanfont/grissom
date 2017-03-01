@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from lib import number_to_text
+from lib.utils import number_to_text
 
 
 class Base:
