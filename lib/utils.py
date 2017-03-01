@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from lib import config
 from lib import mongo
 
@@ -22,6 +24,15 @@ def make_mongo_client():
     port = config.MONGO_PORT
     database = config.MONGO_DATABASE
     return mongo.Client(host, port, database)
+
+
+def remove_querystring_from_url(url):
+    parsed_url = urlparse(url)
+    if not parsed_url:
+        return url
+
+    return f'{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}'
+
 
 def number_to_text(number):
     if number > MAX_NUMBER:

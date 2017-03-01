@@ -3,6 +3,7 @@ import scrapy
 
 from crawler.items import Fotocasa
 from crawler.spiders import ConfigurableSpider
+from lib.utils import remove_querystring_from_url
 
 
 class FotocasaSpider(ConfigurableSpider):
@@ -29,7 +30,10 @@ class FotocasaSpider(ConfigurableSpider):
 
     def parse_item(self, zone, item):
         title = item.css('a.re-Card-title::text').extract_first().strip()
+
         url = item.css('a.re-Card-title::attr(href)').extract_first().strip()
+        url = remove_querystring_from_url(url)
+
         description = item.css('span.re-Card-description::text').extract_first()
         description = description.strip() if description else None
         price = item.css('span.re-Card-price > span::text').extract_first().strip()
