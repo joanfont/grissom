@@ -13,6 +13,5 @@ filters:
   palma:
     min_price: 400
     max_price: 750
-    min_rooms: 2
 
 periodicity: 60
