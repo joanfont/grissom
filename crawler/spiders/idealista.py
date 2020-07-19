@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import logging
 
 from crawler.items import Idealista
 from crawler.spiders import ConfigurableSpider
@@ -12,6 +13,7 @@ class IdealistaSpider(ConfigurableSpider):
     def parse(self, response):
         items = response.css('div.items-container > article:not([class])')
         zone = response.css('div.breadcrumb-geo > ul > li.current-level > span::text').extract_first().strip()
+        self.log(f'Found {len(items)} items in {zone}', logging.INFO)
 
         for item in items:
             yield self.parse_item(item, zone)
@@ -34,5 +36,6 @@ class IdealistaSpider(ConfigurableSpider):
         description = info_container.css('p.item-description::text').extract_first()
         description = description.strip() if description else None
         price = info_container.css('div.price-row > span.item-price::text').extract_first().strip()
+        self.log(f'Item found: {title} in {zone}', logging.INFO)
 
         return Idealista(title=title, url=url, description=description, price=price, town=zone)
