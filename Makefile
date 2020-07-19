@@ -6,3 +6,6 @@ push:
 
 mongo:
 	docker-compose up -d mongo
+
+run-spider:
+	docker-compose run --rm --entrypoint scrapy python runspider $1

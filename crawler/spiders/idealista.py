@@ -11,8 +11,9 @@ class IdealistaSpider(ConfigurableSpider):
     allowed_domains = ['idealista.com']
 
     def parse(self, response):
-        items = response.css('div.items-container > article:not([class])')
-        zone = response.css('div.breadcrumb-geo > ul > li.current-level > span::text').extract_first().strip()
+        items = response.css('section.items-container > article.item')
+        zone = response.css('nav.breadcrumb-geo > ul > li.current-level > span.breadcrumb-title::text').extract_first()
+        zone = zone.strip() if zone else None
         self.log(f'Found {len(items)} items in {zone}', logging.INFO)
 
         for item in items:
@@ -35,7 +36,8 @@ class IdealistaSpider(ConfigurableSpider):
 
         description = info_container.css('p.item-description::text').extract_first()
         description = description.strip() if description else None
-        price = info_container.css('div.price-row > span.item-price::text').extract_first().strip()
+        price = info_container.css('div.price-row > span.item-price::text').extract_first()
+        price = price.strip() if price else None
         self.log(f'Item found: {title} in {zone}', logging.INFO)
 
         return Idealista(title=title, url=url, description=description, price=price, town=zone)
