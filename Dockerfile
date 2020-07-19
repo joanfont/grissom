@@ -1,4 +1,4 @@
-FROM library/python:3.6.0-alpine
+FROM library/python:3.6-alpine
 MAINTAINER Joan Font <joanfont@gmail.com>
 
 RUN apk add --update build-base \
