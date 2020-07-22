@@ -1,4 +1,0 @@
-FROM joanfont/grissom:latest
-
-ADD requirements-test.txt .
-RUN pip install -r requirements-test.txt

@@ -9,9 +9,9 @@ RUN apk add --update build-base \
 
 WORKDIR /code/
 
-ADD requirements.txt .
-RUN pip install -r requirements.txt
+ADD ./ /code/
+ARG BUILD_ENV=prod
+RUN pip install -r docker/environment/requirements-${BUILD_ENV}.txt
 
-ADD . /code/
 
 ENTRYPOINT ["python3"]
