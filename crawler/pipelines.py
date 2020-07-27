@@ -5,10 +5,13 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
+import logging
 
 from notifiers import Notifier
 from async.notifiers import pushbullet
 from lib import mongo
+
+logger = logging.getLogger(__name__)
 
 
 class Pipeline:
@@ -71,6 +74,7 @@ class SaveOnMongo(MongoPipeline):
         return item
 
     def insert_item(self, item):
+        logger.info('Saving item in database')
         self.remove_useless_keys(item)
         self.complete_item(item, {
             'notified': Notifier.STATUS_PENDING,
