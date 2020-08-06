@@ -4,3 +4,6 @@ celerybeat-schedule
 
 ansible/*
 .cache
+
+docker/Dockerfile
+docker/docker-compose.yml

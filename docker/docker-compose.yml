@@ -2,14 +2,18 @@ version: '2'
 
 services:
   python: &python
-    build: .
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        BUILD_ENV: ${BUILD_ENV}
     image: joanfont/grissom:latest
     links:
       - mongo
     env_file:
-      - .env
+      - ../.env
     volumes:
-      - ".:/code"
+      - "../:/code"
 
   mongo:
     image: library/mongo:3.4.2
@@ -45,7 +49,9 @@ services:
   tests:
     <<: *python
     build:
-      context: .
-      dockerfile: Dockerfile.test
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        BUILD_ENV: test
     image: joanfont/grissom:tests
     entrypoint: ["py.test"]

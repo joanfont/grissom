@@ -1,11 +1,17 @@
+DC=docker-compose -f docker/docker-compose.yml
+
+.PHONY: build push mongo spiders
+
 build:
-	docker build -t joanfont/grissom .
+	$(DC) build python
 
 push:
 	docker push joanfont/grissom
 
 mongo:
-	docker-compose up -d mongo
+	$(DC) up -d mongo
 
-run-spider:
-	docker-compose run --rm --entrypoint scrapy python runspider $1
+spider-%:
+	$(DC) run --rm --entrypoint scrapy python runspider crawler/spiders/$*.py
+
+spiders: spider-idealista spider-fotocasa spider-pons_oliver
